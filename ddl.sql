@@ -11,6 +11,7 @@ CREATE TABLE Students
     name              VARCHAR(255)        NOT NULL,
     gender            student_gender_enum NOT NULL,
     email_id          VARCHAR(255) UNIQUE NOT NULL,
+    password          VARCHAR(255)        NOT NULL,
     personal_email_id VARCHAR(255) UNIQUE,
     joining_term      semester_enum       NOT NULL,
     joining_year      INT                 NOT NULL,
