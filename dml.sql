@@ -1,4 +1,4 @@
-INSERT INTO Students (name, gender, email_id, password, personal_email_id, joining_term, joining_year, phone_number,
+INSERT INTO students (name, gender, email_id, password, personal_email_id, joining_term, joining_year, phone_number,
                       nationality)
 VALUES ('John Doe', 'Male', 'john.doe@university.edu', 'student@123', 'johndoe@gmail.com', 'FALL', 2023, '1234567890',
         'USA'),
@@ -48,30 +48,32 @@ VALUES ('John Doe', 'Male', 'john.doe@university.edu', 'student@123', 'johndoe@g
        ('Quincy Scott', 'Other', 'quincy.scott@university.edu', 'student@123', 'quincys@gmail.com', 'SUMMER', 2023,
         '7890109820',
         'Germany');
-INSERT INTO Student_Address (student_id, street, aptno, city, state, zip)
-VALUES (1, '123 Maple St', 'Apt 1', 'New York', 'NY', '10001'),
-       (2, '456 Oak Ave', 'Suite 200', 'Los Angeles', 'CA', '90001'),
-       (3, '789 Pine Rd', 'Apt 5B', 'Chicago', 'IL', '60601'),
-       (4, '321 Cedar Ln', NULL, 'Houston', 'TX', '77001'),
-       (5, '654 Birch Blvd', 'Apt 12C', 'San Francisco', 'CA', '94101'),
-       (6, '987 Elm St', NULL, 'Seattle', 'WA', '98101'),
-       (7, '159 Walnut Dr', 'Apt 3A', 'Miami', 'FL', '33101'),
-       (8, '753 Chestnut Ct', NULL, 'Boston', 'MA', '02101'),
-       (9, '852 Hickory Way', 'Apt 7D', 'Denver', 'CO', '80201'),
-       (10, '963 Poplar Ln', 'Unit 4E', 'Phoenix', 'AZ', '85001'),
-       (11, '147 Spruce St', 'Suite 500', 'Philadelphia', 'PA', '19101'),
-       (12, '258 Redwood Dr', NULL, 'Dallas', 'TX', '75201'),
-       (13, '369 Cypress Ave', 'Apt 2B', 'Atlanta', 'GA', '30301'),
-       (14, '741 Aspen Rd', NULL, 'Detroit', 'MI', '48201'),
-       (15, '852 Sycamore Ln', 'Unit 9C', 'Minneapolis', 'MN', '55401'),
-       (16, '963 Magnolia Blvd', 'Apt 10A', 'San Diego', 'CA', '92101'),
-       (17, '147 Palm Ct', NULL, 'Portland', 'OR', '97201'),
-       (18, '258 Willow Dr', 'Suite 110', 'Las Vegas', 'NV', '89101'),
-       (19, '369 Fir Ave', 'Apt 6F', 'Austin', 'TX', '73301');
 
 
+INSERT INTO student_address (student_id, street, aptno, city, state, country, is_permanent, is_current, zip)
+VALUES (1, '123 Main St', 'Apt 1B', 'Ann Arbor', 'Michigan', 'USA', TRUE, FALSE, '48104'),
+       (1, '456 College Ave', 'Apt 2C', 'Dearborn', 'Michigan', 'USA', FALSE, TRUE, '48126'),
+       (2, '789 Elm St', NULL, 'Chicago', 'Illinois', 'USA', TRUE, TRUE, '60616'),
+       (3, '101 Pine Ave', 'Suite 301', 'San Francisco', 'California', 'USA', TRUE, FALSE, '94107'),
+       (3, '202 Bay Rd', NULL, 'Palo Alto', 'California', 'USA', FALSE, TRUE, '94306'),
+       (4, '303 Oak Lane', 'Unit 5A', 'Boston', 'Massachusetts', 'USA', TRUE, FALSE, '02115'),
+       (4, '404 River St', NULL, 'Cambridge', 'Massachusetts', 'USA', FALSE, TRUE, '02139'),
+       (5, '505 Maple Dr', NULL, 'New York', 'New York', 'USA', TRUE, TRUE, '10001'),
+       (6, '606 Birch St', 'Apt 7B', 'Seattle', 'Washington', 'USA', TRUE, FALSE, '98101'),
+       (6, '707 Cedar Ln', 'Unit 8C', 'Bellevue', 'Washington', 'USA', FALSE, TRUE, '98004'),
+       (7, '808 Spruce Ct', NULL, 'Houston', 'Texas', 'USA', TRUE, TRUE, '77002'),
+       (8, '909 Redwood Blvd', 'Suite 10D', 'Los Angeles', 'California', 'USA', TRUE, FALSE, '90012'),
+       (8, '1010 Hollywood St', NULL, 'Beverly Hills', 'California', 'USA', FALSE, TRUE, '90210'),
+       (9, '1111 Aspen Rd', NULL, 'Austin', 'Texas', 'USA', TRUE, TRUE, '73301'),
+       (10, '1212 Fir St', 'Apt 3E', 'Denver', 'Colorado', 'USA', TRUE, FALSE, '80202'),
+       (10, '1313 Pinecone Ave', 'Unit 4F', 'Boulder', 'Colorado', 'USA', FALSE, TRUE, '80301'),
+       (11, '1414 Chestnut Blvd', NULL, 'Phoenix', 'Arizona', 'USA', TRUE, TRUE, '85001'),
+       (12, '1515 Walnut St', 'Suite 6G', 'Philadelphia', 'Pennsylvania', 'USA', TRUE, FALSE, '19103'),
+       (12, '1616 Cherry Rd', NULL, 'Pittsburgh', 'Pennsylvania', 'USA', FALSE, TRUE, '15222'),
+       (13, '1717 Oakwood Ln', NULL, 'Miami', 'Florida', 'USA', TRUE, TRUE, '33101');
 
-INSERT INTO Staffs (name, gender, designation)
+
+INSERT INTO staff (name, gender, designation)
 VALUES ('Dr. Sarah Adams', 'Female', 'Dean'),
        ('Prof. Michael Bennett', 'Male', 'Professor'),
        ('Dr. Emily Clark', 'Female', 'Vice Professor'),
@@ -92,6 +94,7 @@ VALUES ('Dr. Sarah Adams', 'Female', 'Dean'),
        ('Prof. Olivia Taylor', 'Female', 'Professor'),
        ('Dr. Henry Wilson', 'Male', 'Dean'),
        ('Mr. Jacob Lewis', 'Male', 'Instructor');
+
 INSERT INTO staff_address (staff_id, street, aptno, city, state, zip)
 VALUES (1, '123 Elm St', 'Apt 101', 'New York', 'NY', '10001'),
        (2, '456 Oak St', 'Apt 202', 'Los Angeles', 'CA', '90001'),
@@ -113,277 +116,419 @@ VALUES (1, '123 Elm St', 'Apt 101', 'New York', 'NY', '10001'),
        (18, '1506 Sequoia Blvd', 'Apt 1818', 'Seattle', 'WA', '98101'),
        (19, '1607 Redwood Rd', 'Apt 1919', 'Denver', 'CO', '80201'),
        (20, '1708 Maple St', 'Apt 2020', 'Washington', 'DC', '20001');
-INSERT INTO Department (dean_id)
-VALUES (1),
-       (2),
-       (3),
-       (4),
-       (5),
-       (6),
-       (7),
-       (8),
-       (9),
-       (10),
-       (11),
-       (12),
-       (13),
-       (14),
-       (15),
-       (16),
-       (17),
-       (18),
-       (19),
-       (20);
-INSERT INTO Programs (name, level, department_id)
-VALUES ('Bachelor of Computer Science', 'UG', 1),
-       ('Master of Computer Science', 'PG', 1),
-       ('Doctorate in Computer Science', 'DR.', 1),
-       ('Bachelor of Electrical Engineering', 'UG', 2),
-       ('Master of Electrical Engineering', 'PG', 2),
-       ('Doctorate in Electrical Engineering', 'DR.', 2),
-       ('Bachelor of Mechanical Engineering', 'UG', 3),
-       ('Master of Mechanical Engineering', 'PG', 3),
-       ('Doctorate in Mechanical Engineering', 'DR.', 3),
-       ('Bachelor of Civil Engineering', 'UG', 4),
-       ('Master of Civil Engineering', 'PG', 4),
-       ('Doctorate in Civil Engineering', 'DR.', 4),
-       ('Bachelor of Chemical Engineering', 'UG', 5),
-       ('Master of Chemical Engineering', 'PG', 5),
-       ('Doctorate in Chemical Engineering', 'DR.', 5),
-       ('Bachelor of Business Administration', 'UG', 6),
-       ('Master of Business Administration', 'PG', 6),
-       ('Doctorate in Business Administration', 'DR.', 6),
-       ('Bachelor of Arts in Psychology', 'UG', 7),
-       ('Master of Arts in Psychology', 'PG', 7);
 
-INSERT INTO College (name, president_id)
-VALUES ('Harvard University', 1),
-       ('Stanford University', 2),
-       ('Massachusetts Institute of Technology', 3),
-       ('University of California, Berkeley', 4),
-       ('California Institute of Technology', 5),
-       ('Princeton University', 6),
-       ('University of Chicago', 7),
-       ('Columbia University', 8),
-       ('Yale University', 9),
-       ('University of Pennsylvania', 10),
-       ('Oxford University', 11),
-       ('Cambridge University', 12),
-       ('University of Tokyo', 13),
-       ('Peking University', 14),
-       ('University of Melbourne', 15),
-       ('Imperial College London', 16),
-       ('ETH Zurich', 17),
-       ('National University of Singapore', 18),
-       ('University of Toronto', 19),
-       ('Australian National University', 20);
-INSERT INTO college_department (college_id, department_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (1, 4),
-       (2, 5),
-       (2, 6),
-       (2, 7),
-       (2, 8),
-       (3, 9),
-       (3, 10),
-       (3, 11),
-       (3, 12),
-       (4, 13),
-       (4, 14),
-       (4, 15),
-       (4, 16),
-       (5, 17),
-       (5, 18),
-       (5, 19),
-       (5, 20);
-INSERT INTO Courses (course_code, name, credits, total_hours, pre_requisite)
-VALUES ('CS101', 'Introduction to Computer Science', 3, 40, NULL),
-       ('CS102', 'Data Structures and Algorithms', 4, 50, 1),
-       ('CS103', 'Discrete Mathematics', 3, 40, NULL),
-       ('CS104', 'Computer Architecture', 3, 45, 2),
-       ('CS105', 'Operating Systems', 4, 50, 4),
-       ('CS106', 'Database Management Systems', 3, 40, 2),
-       ('CS107', 'Software Engineering', 3, 45, 6),
-       ('CS108', 'Computer Networks', 3, 40, 5),
-       ('CS109', 'Artificial Intelligence', 3, 45, 7),
-       ('CS110', 'Machine Learning', 4, 50, 9),
-       ('CS111', 'Data Science', 3, 40, 10),
-       ('CS112', 'Cybersecurity Fundamentals', 3, 40, NULL),
-       ('CS113', 'Web Development', 3, 40, NULL),
-       ('CS114', 'Mobile Application Development', 3, 45, 13),
-       ('CS115', 'Cloud Computing', 3, 40, 8),
-       ('CS116', 'Big Data Analytics', 4, 50, 11),
-       ('CS117', 'Computer Graphics', 3, 40, 4),
-       ('CS118', 'Human-Computer Interaction', 3, 40, 7),
-       ('CS119', 'Blockchain Technology', 3, 45, 12),
-       ('CS120', 'Quantum Computing', 3, 40, 19);
+INSERT INTO college (id, name, president_id)
+VALUES (1, 'College of Arts, Sciences and Letters', 1),
+       (2, 'College of Business', 2),
+       (3, 'College of Education, Health and Human Services', 3),
+       (4, 'College of Engineering and Computer Science', 4);
+
+INSERT INTO department (id, name, dean_id, college_id)
+VALUES (1, 'Behavioral Sciences', 1, 1),
+       (2, 'Language, Culture, and the Arts', 2, 1),
+       (3, 'Mathematics and Statistics', 3, 1),
+       (4, 'Natural Sciences', 4, 1),
+       (5, 'Social Sciences', 5, 1),
+       (6, 'Accounting', 6, 2),
+       (7, 'Digital Marketing', 7, 2),
+       (8, 'General Business', 8, 2),
+       (9, 'Finance', 9, 2),
+       (10, 'Human Resource Management', 10, 2),
+       (11, 'Supply Chain Management', 1, 2),
+       (12, 'Business Analytics', 2, 2),
+       (13, 'Information System Management', 3, 2),
+       (14, 'Education', 4, 3),
+       (15, 'Health and Human Services', 5, 3),
+       (16, 'Computer and Information Science', 6, 4),
+       (17, 'Electrical and Computer Engineering', 7, 4),
+       (18, 'Industrial and Manufacturing Systems Engineering', 8, 4),
+       (19, 'Mechanical Engineering', 9, 4);
+
+INSERT INTO programs (id, name, level, department_id)
+VALUES
+-- College of Arts, Sciences and Letters (Departments: 1-5)
+(1, 'Undergraduate Program', 'UG', 1),
+(2, 'Graduate Program', 'PG', 2),
+(3, 'Certifications', 'Asso.', 3),
+
+-- College of Business (Departments: 6-13)
+(4, 'Undergraduate Program', 'UG', 6),
+(5, 'Graduate Program', 'PG', 7),
+
+-- College of Education, Health and Human Services (Departments: 14-15)
+(6, 'Undergraduate Program', 'UG', 14),
+(7, 'Graduate Program', 'PG', 15),
+(8, 'Post-Degree and Endorsement Programs', 'Asso.', 14),
+
+-- College of Engineering and Computer Science (Departments: 16-19)
+(9, 'Undergraduate Program', 'UG', 16),
+(10, 'Graduate Program', 'PG', 17),
+(11, 'PhD Programs', 'DR.', 18),
+(12, 'D.Eng Programs', 'DR.', 19);
+
+
+INSERT INTO courses (id, department_id, course_code, name, credits, total_hours, pre_requisite)
+VALUES
+-- College of Arts, Science and Letters
+(1, 1, 'ASL101', 'Introduction to Sociology', 3, 165, NULL),
+(2, 1, 'ASL102', 'Psychology of Human Behavior', 3, 165, NULL),
+(3, 1, 'ASL201', 'Cultural Anthropology', 3, 165, 1),
+(4, 2, 'LIT201', 'World Literature', 3, 165, NULL),
+(5, 2, 'LIT202', 'Creative Writing', 3, 165, 4),
+(6, 2, 'LIT203', 'Classical Mythology', 3, 165, 5),
+(7, 3, 'MTH201', 'Calculus I', 3, 165, NULL),
+(8, 3, 'MATH202', 'Linear Algebra', 3, 165, NULL),
+(9, 3, 'MTH301', 'Differential Equations', 3, 165, 8),
+(10, 4, 'BIO101', 'General Biology', 3, 165, NULL),
+(11, 4, 'BIO202', 'Microbiology', 3, 165, 10),
+(12, 4, 'CHE101', 'General Chemistry', 3, 165, NULL),
+(13, 5, 'SOC201', 'Social Research Methods', 3, 165, NULL),
+(14, 5, 'SOC202', 'Comparative Politics', 3, 165, 13),
+
+-- College of Business
+(15, 6, 'ACC101', 'Financial Accounting', 3, 165, NULL),
+(16, 6, 'ACC201', 'Managerial Accounting', 3, 165, 15),
+(17, 7, 'MKT101', 'Principles of Marketing', 3, 165, NULL),
+(18, 7, 'MKT202', 'Consumer Behavior', 3, 165, 17),
+(19, 8, 'BUS101', 'Introduction to Business', 3, 165, NULL),
+(20, 8, 'BUS201', 'Business Law', 3, 165, NULL),
+(21, 9, 'FIN101', 'Corporate Finance', 3, 165, NULL),
+(22, 9, 'FIN202', 'Investment Strategies', 3, 165, 21),
+(23, 10, 'HRM101', 'Human Resources Management', 3, 165, NULL),
+(24, 10, 'HRM201', 'Organizational Behavior', 3, 165, 23),
+
+-- College of Education, Health
+(25, 14, 'EDU101', 'Foundations of Education', 3, 165, NULL),
+(26, 14, 'EDU201', 'Classroom Management', 3, 165, 25),
+(27, 15, 'HHS101', 'Introduction to Public Health', 3, 165, NULL),
+(28, 15, 'HHS202', 'Healthcare Policy', 3, 165, 27),
+
+-- College of Engineering
+(29, 16, 'CIS101', 'Programming Fundamentals', 3, 165, NULL),
+(30, 16, 'CIS201', 'Data Structures', 3, 165, 29),
+(31, 16, 'CSE202', 'Computer Architecture', 3, 165, NULL),
+(32, 16, 'CSE301', 'Artificial Intelligence', 3, 165, 31),
+(33, 17, 'ECE101', 'Circuit Analysis', 3, 165, NULL),
+(34, 17, 'ECE202', 'Digital Systems', 3, 165, NULL),
+(35, 18, 'EEE101', 'Electromagnetics', 3, 165, NULL),
+(36, 18, 'EEE201', 'Microprocessors', 3, 165, 35),
+(37, 19, 'ME101', 'Thermodynamics', 3, 165, NULL),
+(38, 19, 'ME201', 'Heat Transfer', 3, 165, 37),
+(39, 19, 'ME301', 'Machine Elements', 3, 165, NULL);
+
+
+
 INSERT INTO program_registration (student_id, program_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3),
-       (4, 4),
-       (5, 5),
-       (6, 6),
-       (7, 7),
-       (8, 8),
-       (9, 9),
-       (10, 10),
-       (11, 1),
-       (12, 2),
-       (13, 3),
-       (14, 4),
-       (15, 5),
+VALUES (1, 3),
+       (2, 5),
+       (3, 8),
+       (4, 10),
+       (5, 2),
+       (6, 7),
+       (7, 12),
+       (8, 11),
+       (9, 1),
+       (10, 6),
+       (11, 9),
+       (12, 10),
+       (13, 11),
+       (14, 8),
+       (15, 4),
        (16, 6),
-       (17, 7),
-       (18, 8),
-       (19, 9);
+       (17, 6),
+       (18, 5),
+       (19, 12),
+       (5, 9);
 
 INSERT INTO department_staff (department_id, staff_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
+VALUES (1, 5),   -- Behavioral Sciences
+       (1, 6),
+       (2, 3),   -- Language, Culture, and the Arts
        (2, 4),
-       (2, 5),
-       (2, 6),
-       (3, 7),
-       (3, 8),
-       (3, 9),
-       (4, 10),
-       (4, 11),
-       (4, 12),
-       (5, 13),
-       (5, 14),
-       (5, 15),
-       (6, 16),
-       (6, 17),
-       (6, 18),
-       (7, 19),
-       (7, 20);
-INSERT INTO Classrooms (room_number, max_acc)
-VALUES ('A101', 30),
-       ('A102', 35),
-       ('A103', 40),
-       ('B201', 50),
-       ('B202', 45),
-       ('B203', 60),
-       ('C301', 25),
-       ('C302', 30),
-       ('C303', 40),
-       ('D401', 50),
-       ('D402', 55),
-       ('D403', 60),
-       ('E501', 40),
-       ('E502', 45),
-       ('E503', 50),
-       ('F601', 35),
-       ('F602', 40),
-       ('F603', 45),
-       ('G701', 25),
-       ('G702', 30);
-INSERT INTO Classrooms (room_number, max_acc)
-VALUES ('A101', 30),
-       ('A102', 40),
-       ('A103', 50),
-       ('B201', 60),
-       ('B202', 45),
-       ('B203', 55),
-       ('C301', 40),
-       ('C302', 35),
-       ('C303', 50),
-       ('D401', 65),
-       ('D402', 70),
-       ('D403', 60),
-       ('E501', 30),
-       ('E502', 40),
-       ('E503', 45),
-       ('F601', 55),
-       ('F602', 50),
-       ('F603', 45),
-       ('G701', 40),
-       ('G702', 60);
-INSERT INTO courses_offered (course_id, lectured_by, semester, year, start_time, end_time, day_of_week, class_room_id)
-VALUES (1, 1, 'FALL', 2025, '09:00', '11:00', 'Monday', 1),
-       (2, 2, 'FALL', 2025, '11:00', '13:00', 'Monday', 2),
-       (3, 3, 'WINTER', 2025, '09:00', '11:00', 'Tuesday', 3),
-       (4, 4, 'WINTER', 2025, '11:00', '13:00', 'Tuesday', 4),
-       (5, 5, 'SUMMER', 2025, '09:00', '11:00', 'Wednesday', 5),
-       (6, 6, 'SUMMER', 2025, '11:00', '13:00', 'Wednesday', 6),
-       (7, 7, 'FALL', 2025, '09:00', '11:00', 'Thursday', 7),
-       (8, 8, 'FALL', 2025, '11:00', '13:00', 'Thursday', 8),
-       (9, 9, 'WINTER', 2025, '09:00', '11:00', 'Friday', 9),
-       (10, 10, 'WINTER', 2025, '11:00', '13:00', 'Friday', 10),
-       (11, 11, 'SUMMER', 2025, '09:00', '11:00', 'Monday', 11),
-       (12, 12, 'SUMMER', 2025, '11:00', '13:00', 'Monday', 12),
-       (13, 13, 'FALL', 2025, '09:00', '11:00', 'Tuesday', 13),
-       (14, 14, 'FALL', 2025, '11:00', '13:00', 'Tuesday', 14),
-       (15, 15, 'WINTER', 2025, '09:00', '11:00', 'Wednesday', 15),
-       (16, 16, 'WINTER', 2025, '11:00', '13:00', 'Wednesday', 16),
-       (17, 17, 'SUMMER', 2025, '09:00', '11:00', 'Thursday', 17),
-       (18, 18, 'SUMMER', 2025, '11:00', '13:00', 'Thursday', 18),
-       (19, 19, 'FALL', 2025, '09:00', '11:00', 'Friday', 19),
-       (20, 20, 'FALL', 2025, '11:00', '13:00', 'Friday', 20);
-INSERT INTO course_registration (student_id, course_offered_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 3),
-       (2, 4),
-       (3, 5),
+       (3, 5),   -- Mathematics and Statistics
        (3, 6),
-       (4, 7),
+       (4, 7),   -- Natural Sciences
        (4, 8),
-       (5, 9),
+       (5, 9),   -- Social Sciences
        (5, 10),
-       (6, 11),
+       (6, 11),  -- Accounting
        (6, 12),
-       (7, 13),
+       (7, 13),  -- Digital Marketing
        (7, 14),
-       (8, 15),
+       (8, 15),  -- General Business
        (8, 16),
-       (9, 17),
+       (9, 17),  -- Finance
        (9, 18),
-       (10, 19),
-       (10, 20);
+       (10, 19), -- Human Resource Management
+       (10, 20),
+       (11, 1),  -- Supply Chain Management
+       (11, 2),
+       (12, 3),  -- Business Analytics
+       (12, 4),
+       (13, 5),  -- Information System Management
+       (13, 6),
+       (14, 7),  -- Education
+       (14, 8),
+       (15, 9),  -- Health and Human Services
+       (15, 10),
+       (16, 11), -- Computer and Information Science
+       (16, 12),
+       (17, 13), -- Electrical and Computer Engineering
+       (17, 14),
+       (18, 15), -- Industrial and Manufacturing Systems Engineering
+       (18, 16),
+       (19, 17), -- Mechanical Engineering
+       (19, 18);
+
+
+
+INSERT INTO classrooms (room_number, max_acc)
+VALUES
+-- Behavioral Sciences Building (BSB)
+('BSB-101', 50),
+('BSB-102', 40),
+('BSB-201', 60),
+('BSB-202', 45),
+('BSB-301', 55),
+('BSB-Lab1', 30),
+('BSB-Lab2', 25),
+
+-- Language, Culture, and the Arts Building (LCA)
+('LCA-101', 50),
+('LCA-102', 40),
+('LCA-201', 60),
+('LCA-202', 45),
+('LCA-301', 55),
+('LCA-Lab1', 30),
+('LCA-Lab2', 25),
+
+-- Mathematics and Statistics Building (MSB)
+('MSB-101', 50),
+('MSB-102', 40),
+('MSB-201', 60),
+('MSB-202', 45),
+('MSB-301', 55),
+('MSB-Lab1', 30),
+('MSB-Lab2', 25),
+
+-- Natural Sciences Building (NSB)
+('NSB-101', 50),
+('NSB-102', 40),
+('NSB-201', 60),
+('NSB-202', 45),
+('NSB-301', 55),
+('NSB-Lab1', 30),
+('NSB-Lab2', 25),
+
+-- Social Sciences Building (SSB)
+('SSB-101', 50),
+('SSB-102', 40),
+('SSB-201', 60),
+('SSB-202', 45),
+('SSB-301', 55),
+('SSB-Lab1', 30),
+('SSB-Lab2', 25),
+
+-- Accounting Building (ACB)
+('ACB-101', 50),
+('ACB-102', 40),
+('ACB-201', 60),
+('ACB-202', 45),
+('ACB-301', 55),
+('ACB-Lab1', 30),
+('ACB-Lab2', 25),
+
+-- Digital Marketing Building (DMB)
+('DMB-101', 50),
+('DMB-102', 40),
+('DMB-201', 60),
+('DMB-202', 45),
+('DMB-301', 55),
+('DMB-Lab1', 30),
+('DMB-Lab2', 25),
+
+-- General Business Building (GBB)
+('GBB-101', 50),
+('GBB-102', 40),
+('GBB-201', 60),
+('GBB-202', 45),
+('GBB-301', 55),
+('GBB-Lab1', 30),
+('GBB-Lab2', 25),
+
+-- Finance Building (FB)
+('FB-101', 50),
+('FB-102', 40),
+('FB-201', 60),
+('FB-202', 45),
+('FB-301', 55),
+('FB-Lab1', 30),
+('FB-Lab2', 25),
+
+-- Human Resource Management Building (HRMB)
+('HRMB-101', 50),
+('HRMB-102', 40),
+('HRMB-201', 60),
+('HRMB-202', 45),
+('HRMB-301', 55),
+('HRMB-Lab1', 30),
+('HRMB-Lab2', 25),
+
+-- Supply Chain Management Building (SCMB)
+('SCMB-101', 50),
+('SCMB-102', 40),
+('SCMB-201', 60),
+('SCMB-202', 45),
+('SCMB-301', 55),
+('SCMB-Lab1', 30),
+('SCMB-Lab2', 25),
+
+-- Education Building (EDB)
+('EDB-101', 50),
+('EDB-102', 40),
+('EDB-201', 60),
+('EDB-202', 45),
+('EDB-301', 55),
+('EDB-Lab1', 30),
+('EDB-Lab2', 25),
+
+-- Health and Human Services Building (HHSB)
+('HHSB-101', 50),
+('HHSB-102', 40),
+('HHSB-201', 60),
+('HHSB-202', 45),
+('HHSB-301', 55),
+('HHSB-Lab1', 30),
+('HHSB-Lab2', 25),
+
+-- Computer and Information Science Building (CISB)
+('CISB-101', 50),
+('CISB-102', 40),
+('CISB-201', 60),
+('CISB-202', 45),
+('CISB-301', 55),
+('CISB-Lab1', 30),
+('CISB-Lab2', 25),
+
+-- Electrical and Computer Engineering Building (ECEB)
+('ECEB-101', 50),
+('ECEB-102', 40),
+('ECEB-201', 60),
+('ECEB-202', 45),
+('ECEB-301', 55),
+('ECEB-Lab1', 30),
+('ECEB-Lab2', 25),
+
+-- Industrial and Manufacturing Systems Engineering Building (IMSEB)
+('IMSB-101', 50),
+('IMSB-102', 40),
+('IMSB-201', 60),
+('IMSB-202', 45),
+('IMSB-301', 55),
+('IMSB-Lab1', 30),
+('IMSB-Lab2', 25),
+
+-- Mechanical Engineering Building (MEB)
+('MEB-101', 50),
+('MEB-102', 40),
+('MEB-201', 60),
+('MEB-202', 45),
+('MEB-301', 55),
+('MEB-Lab1', 30),
+('MEB-Lab2', 25);
+
+
+INSERT INTO courses_offered (course_id, lectured_by, semester, year, start_time, end_time, day_of_week, class_room_id)
+VALUES
+-- Fall 2025 Courses
+(1, 2, 'FALL', 2025, '09:00:00', '10:45:00', 'Monday', 1),
+(2, 3, 'FALL', 2025, '11:00:00', '12:45:00', 'Tuesday', 2),
+(3, 4, 'FALL', 2025, '14:00:00', '15:45:00', 'Wednesday', 3),
+(4, 5, 'FALL', 2025, '10:00:00', '11:45:00', 'Thursday', 4),
+(5, 6, 'FALL', 2025, '13:00:00', '14:45:00', 'Friday', 5),
+(6, 7, 'FALL', 2025, '15:00:00', '16:45:00', 'Monday', 6),
+(7, 8, 'FALL', 2025, '09:00:00', '10:45:00', 'Wednesday', 7),
+
+-- Winter 2025 Courses
+(8, 9, 'WINTER', 2025, '10:00:00', '11:45:00', 'Tuesday', 8),
+(9, 10, 'WINTER', 2025, '13:00:00', '14:45:00', 'Thursday', 9),
+(10, 11, 'WINTER', 2025, '15:00:00', '16:45:00', 'Friday', 10),
+(11, 12, 'WINTER', 2025, '09:00:00', '10:45:00', 'Monday', 11),
+(12, 13, 'WINTER', 2025, '11:00:00', '12:45:00', 'Wednesday', 12),
+(13, 14, 'WINTER', 2025, '14:00:00', '15:45:00', 'Tuesday', 13),
+
+-- Summer 2025 Courses
+(14, 15, 'SUMMER', 2025, '10:00:00', '11:45:00', 'Monday', 14),
+(15, 16, 'SUMMER', 2025, '12:00:00', '13:45:00', 'Tuesday', 15),
+(16, 17, 'SUMMER', 2025, '14:00:00', '15:45:00', 'Wednesday', 16),
+(17, 18, 'SUMMER', 2025, '09:00:00', '10:45:00', 'Thursday', 17),
+(18, 19, 'SUMMER', 2025, '13:00:00', '14:45:00', 'Friday', 18),
+(19, 20, 'SUMMER', 2025, '15:00:00', '16:45:00', 'Monday', 19),
+(20, 18, 'SUMMER', 2025, '11:00:00', '12:45:00', 'Wednesday', 20);
+
+
+INSERT INTO course_registration (student_id, course_offered_id)
+VALUES (1, 7),
+       (2, 10),
+       (3, 15),
+       (4, 20),
+       (5, 3),
+       (6, 8),
+       (7, 12),
+       (8, 17),
+       (9, 2),
+       (10, 6),
+       (11, 11),
+       (12, 14),
+       (13, 18),
+       (14, 1),
+       (15, 4),
+       (16, 7),
+       (17, 9),
+       (18, 13),
+       (19, 16);
 INSERT INTO timetable (courses_offered_id, class_date)
-VALUES (1, '2025-09-01'),
-       (2, '2025-09-02'),
-       (3, '2025-09-03'),
-       (4, '2025-09-04'),
-       (5, '2025-09-05'),
-       (6, '2025-09-08'),
-       (7, '2025-09-09'),
-       (8, '2025-09-10'),
-       (9, '2025-09-11'),
-       (10, '2025-09-12'),
-       (11, '2025-09-15'),
-       (12, '2025-09-16'),
-       (13, '2025-09-17'),
-       (14, '2025-09-18'),
-       (15, '2025-09-19'),
-       (16, '2025-09-22'),
-       (17, '2025-09-23'),
-       (18, '2025-09-24'),
-       (19, '2025-09-25'),
-       (20, '2025-09-26');
+VALUES (1, '2025-01-10'),
+       (1, '2025-01-17'),
+       (1, '2025-01-24'),
+       (2, '2025-02-05'),
+       (2, '2025-02-12'),
+       (2, '2025-02-19'),
+       (3, '2025-03-08'),
+       (3, '2025-03-15'),
+       (3, '2025-03-22'),
+       (4, '2025-04-01'),
+       (4, '2025-04-08'),
+       (4, '2025-04-15'),
+       (5, '2025-05-10'),
+       (5, '2025-05-17'),
+       (5, '2025-05-24'),
+       (6, '2025-06-05'),
+       (6, '2025-06-12'),
+       (6, '2025-06-19'),
+       (7, '2025-07-01'),
+       (7, '2025-07-08');
+
+
 INSERT INTO attendance (student_id, timetable_id, is_present)
 VALUES (1, 1, TRUE),
-       (1, 2, FALSE),
-       (2, 3, TRUE),
+       (1, 2, TRUE),
+       (1, 3, FALSE),
        (2, 4, TRUE),
-       (3, 5, FALSE),
-       (3, 6, TRUE),
-       (4, 7, TRUE),
-       (4, 8, FALSE),
-       (5, 9, TRUE),
-       (5, 10, TRUE),
-       (6, 11, FALSE),
-       (6, 12, TRUE),
-       (7, 13, TRUE),
-       (7, 14, TRUE),
-       (8, 15, FALSE),
-       (8, 16, TRUE),
-       (9, 17, TRUE),
-       (9, 18, TRUE),
-       (10, 19, FALSE),
-       (10, 20, TRUE);
+       (2, 5, FALSE),
+       (2, 6, TRUE),
+       (3, 7, TRUE),
+       (3, 8, FALSE),
+       (3, 9, TRUE),
+       (4, 10, TRUE),
+       (4, 11, TRUE),
+       (4, 12, FALSE),
+       (5, 13, FALSE),
+       (5, 14, TRUE),
+       (5, 15, TRUE),
+       (6, 16, TRUE),
+       (6, 17, FALSE),
+       (6, 18, TRUE),
+       (7, 19, TRUE),
+       (7, 20, FALSE);
+
