@@ -248,7 +248,7 @@ def register_student():
     required_address_fields = ["street", "city", "state", "country", "zip"]
     for field in required_address_fields:
         for address in data["addresses"]:
-            if field not in address:
+            if field not in address or not address[field]:
                 return jsonify({"error": f"Missing required address field: {field}"}), 400
 
     if not(len(data["addresses"]) == 1 or len(data["addresses"]) == 2):
