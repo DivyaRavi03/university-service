@@ -1,7 +1,39 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import psycopg2
 import hashlib
 import re
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes, serialization
+import base64
+import jwt
+import datetime
+
+# Step 1: Load the Private Key from a .pem file
+def load_private_key(private_key_path):
+    with open(private_key_path, "rb") as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None  # Use password here if the private key is encrypted
+        )
+    return private_key
+
+# Step 2: Decrypt the encrypted text using the private key
+def decrypt_text(encrypted_text, private_key):
+    encrypted_bytes = base64.b64decode(encrypted_text)
+    decrypted = private_key.decrypt(
+        encrypted_bytes,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return decrypted.decode('utf-8')
+
+# Step 4: JWT Secret Key
+JWT_SECRET = "my_jwt_secret_key"  # Change this to a strong, random secret in production
+
+private_key = load_private_key("private_key.pem")
 
 app = Flask(__name__)
 
@@ -16,6 +48,75 @@ DB_CONFIG = {
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
+
+@app.route('/api/v1/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    # Validate input fields
+    email = data.get("email")
+    encrypted_password = data.get("password")
+
+    if not email or not encrypted_password:
+        return jsonify({"error": "Missing email or password"}), 400
+
+    try:
+        # Decrypt the password
+        password = decrypt_text(encrypted_password, private_key)
+        hashed_password = hash_password(password)
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Check if the user exists with the given email and password
+        query = """
+            SELECT id, name, email_id, personal_email_id
+            FROM Students
+            WHERE (email_id = %s OR personal_email_id = %s) AND password = %s
+        """
+        cur.execute(query, (email, email, hashed_password))
+        user = cur.fetchone()
+
+        if not user:
+            return jsonify({"error": "Invalid email or password"}), 401
+
+        # Create JWT token
+        payload = {
+            "user_id": user[0],
+            "email": user[2] if email == user[2] else user[3],
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token expiration time
+        }
+
+        token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+        # Set JWT token in HTTP-only cookie
+        response = make_response(jsonify({"message": "Login successful", "user_id": user[0]}))
+        response.set_cookie("token", token, httponly=True, secure=True, max_age=3600)  # 1 hour expiry
+
+        cur.close()
+        conn.close()
+
+        return response
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/v1/protected', methods=['GET'])
+def protected():
+    token = request.cookies.get('token')
+
+    if not token:
+        return jsonify({"error": "Missing token"}), 401
+
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        return jsonify({"message": "Protected content accessed", "user": payload})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"error": "Invalid token"}), 401
 
 @app.route('/api/v1/courses/offered', methods=['GET'])
 def get_courses_offered():
@@ -178,11 +279,14 @@ def register_student():
     gender = data["gender"].strip().capitalize()
     email_id = data["email_id"].strip().lower()
     personal_email = data.get("personal_email", "").strip().lower()
-    password = data["password"]
+    encrypted_password = data["password"]
     joining_term = data["joining_term"].strip().upper()
     joining_year = data["joining_year"]
     phone_number = data.get("phone_number", "").strip()
     nationality = data["nationality"].strip().capitalize()
+
+    password = decrypt_text(encrypted_password, private_key)
+
 
     # Email validation
     if not is_valid_email(email_id) or (personal_email and not is_valid_email(personal_email)):
