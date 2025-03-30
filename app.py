@@ -223,6 +223,61 @@ def get_program():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/v1/courses_offered/<int:course_offered_id>', methods=['GET'])
+def get_course_offered(course_offered_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT co.id, co.lectured_by, co.course_id, co.semester, co.year, 
+               co.start_time, co.end_time, co.day_of_week, 
+               c.name, c.course_code, c.credits, c.total_hours, 
+               s.name AS lecturer_name, cr.room_number,
+               COALESCE(
+                   json_agg(
+                       CASE WHEN prereq.id IS NOT NULL THEN
+                           json_build_object(
+                               'id', prereq.id, 'name', prereq.name, 'course_code', prereq.course_code)
+                       END
+                   ) FILTER (WHERE prereq.id IS NOT NULL), '[]'
+               ) AS prerequisite_courses
+        FROM courses_offered co
+        INNER JOIN courses c ON co.course_id = c.id
+        INNER JOIN staff s ON co.lectured_by = s.id
+        INNER JOIN classrooms cr ON co.class_room_id = cr.id
+        LEFT JOIN courses prereq ON prereq.id = c.pre_requisite 
+        WHERE co.id = %s
+        GROUP BY co.id, co.lectured_by, co.course_id, co.semester, co.year, 
+                 co.start_time, co.end_time, co.day_of_week, 
+                 c.name, c.course_code, c.credits, c.total_hours, 
+                 s.name, cr.room_number;
+    """
+    cursor.execute(query, (course_offered_id,))
+    course_details = cursor.fetchone()
+
+    if not course_details:
+        return jsonify({"error": "Course offered ID not found"}), 404
+
+    # Column mapping
+    columns = ["id", "lectured_by", "course_id", "semester", "year", "start_time", "end_time", "day_of_week",
+               "course_name", "course_code", "credits", "total_hours", "lecturer_name", "room_number", "prerequisite_courses"]
+    course_data = dict(zip(columns, course_details))
+
+    # Convert time fields to string format
+    if isinstance(course_data["start_time"], (tuple, list)):
+        course_data["start_time"] = str(course_data["start_time"])
+    if isinstance(course_data["end_time"], (tuple, list)):
+        course_data["end_time"] = str(course_data["end_time"])
+
+    course_data["start_time"] = str(course_data["start_time"])
+    course_data["end_time"] = str(course_data["end_time"])
+
+
+    cursor.close()
+    conn.close()
+    return jsonify(course_data)
+
+
 # Function to hash passwords securely
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
