@@ -532,3 +532,49 @@ VALUES (1, 1, TRUE),
        (7, 19, TRUE),
        (7, 20, FALSE);
 
+INSERT INTO grade_scale (course_offered_id, ranges)
+VALUES
+    (1, '{
+  "A+": [90, 100],
+  "A": [85, 89],
+  "A-": [80, 84],
+  "B+": [75, 79],
+  "B": [70, 74],
+  "B-": [65, 69],
+  "C": [60, 64],
+  "D": [50, 59],
+  "E": [40, 49],
+  "F": [0, 39]
+}');
+
+INSERT INTO student_grades (course_registration_id, result, grade, final_percentage)
+VALUES
+    (1, 'PASS', 'A', 88.50),
+    (2, 'PASS', 'B+', 76.20),
+    (3, 'FAIL', 'F', 32.75);
+
+
+
+INSERT INTO assignments (
+    course_offered_id, title, body, start_datetime, end_datetime,
+    is_group_assignment, is_everyone_needs_to_submit,
+    max_points, max_attempts, allowed_similarity_score
+)
+VALUES
+    (1, 'Assignment 1: Introduction to Databases',
+     'This assignment covers the basics of SQL, including SELECT queries, filtering, and joins.',
+     '2025-04-10 09:00:00', '2025-04-17 23:59:59', FALSE, TRUE, 100, 3, 25.00),
+
+    (2, 'Assignment 2: ER Modeling and Normalization',
+     'This is a group assignment focused on entity-relationship modeling and normalization up to 3NF.',
+     '2025-04-11 10:00:00', '2025-04-18 23:59:59', TRUE, FALSE, 50, 2, 20.00);
+
+
+INSERT INTO assignment_submissions (
+    assignment_id, course_registration_id, uploaded_at,
+    uploaded_key, uploaded_file_name, similarity_score)
+VALUES
+    (1, 1, '2025-04-12 14:23:00', 'uploads/assignment1_student1.pdf', 'assignment1_student1.pdf', 12.50),
+    (1, 2, '2025-04-12 16:00:00', 'uploads/assignment1_student2.pdf', 'assignment1_student2.pdf', 18.30),
+    (2, 3, '2025-04-13 11:45:00', 'uploads/assignment2_groupA.pdf', 'assignment2_groupA.pdf', 27.10);
+

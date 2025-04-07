@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, g
 import psycopg2
+from functools import wraps
 import hashlib
 import re
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -7,6 +8,13 @@ from cryptography.hazmat.primitives import hashes, serialization
 import base64
 import jwt
 import datetime
+
+allowed_semesters = {
+    'FALL': 2025,
+    'SUMMER': 2025
+}
+
+allowed_credits = 9
 
 # Step 1: Load the Private Key from a .pem file
 def load_private_key(private_key_path):
@@ -45,6 +53,23 @@ DB_CONFIG = {
     "host": "localhost",
     "port": "5432"
 }
+
+def auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        token = request.cookies.get('token')
+        if not token:
+            return jsonify({"error": "Missing token"}), 401
+        try:
+            payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+            # Attach user_id to the global request context
+            g.user_id = payload["user_id"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token expired"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
@@ -225,9 +250,40 @@ def get_program():
 
 @app.route('/api/v1/courses_offered/<int:course_offered_id>', methods=['GET'])
 def get_course_offered(course_offered_id):
+    return jsonify(get_course_offered_details(course_offered_id))
+
+
+def get_pre_requisite_results(student_id, pre_requisites):
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    # Format the pre_requisites list for the IN clause
+    formatted_pre_requisites = ', '.join(['%s'] * len(pre_requisites))
+
+    # Query with IN clause for pre_requisites
+    query = f"""SELECT sg.result, c.course_code
+                FROM student_grades sg
+                INNER JOIN course_registration cr ON sg.course_registration_id = cr.id
+                INNER JOIN courses_offered co ON cr.course_offered_id = co.id
+                INNER JOIN courses c ON co.course_id = c.id
+                WHERE c.pre_requisite IN ({formatted_pre_requisites}) AND cr.student_id = %s;"""
+
+    # Execute query
+    cursor.execute(query, pre_requisites + [student_id])
+
+    # Fetch results and convert to list of dictionaries
+    pre_requisite_results = cursor.fetchall()
+    column_names = [desc[0] for desc in cursor.description]
+    cursor.close()
+    conn.close()
+
+    result = [dict(zip(column_names, pre_requisite_result)) for pre_requisite_result in pre_requisite_results]
+    return result
+
+
+def get_course_offered_details(course_offered_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
     query = """
         SELECT co.id, co.lectured_by, co.course_id, co.semester, co.year, 
                co.start_time, co.end_time, co.day_of_week, 
@@ -254,28 +310,93 @@ def get_course_offered(course_offered_id):
     """
     cursor.execute(query, (course_offered_id,))
     course_details = cursor.fetchone()
-
     if not course_details:
         return jsonify({"error": "Course offered ID not found"}), 404
-
     # Column mapping
     columns = ["id", "lectured_by", "course_id", "semester", "year", "start_time", "end_time", "day_of_week",
-               "course_name", "course_code", "credits", "total_hours", "lecturer_name", "room_number", "prerequisite_courses"]
+               "course_name", "course_code", "credits", "total_hours", "lecturer_name", "room_number",
+               "prerequisite_courses"]
     course_data = dict(zip(columns, course_details))
-
     # Convert time fields to string format
     if isinstance(course_data["start_time"], (tuple, list)):
         course_data["start_time"] = str(course_data["start_time"])
     if isinstance(course_data["end_time"], (tuple, list)):
         course_data["end_time"] = str(course_data["end_time"])
-
     course_data["start_time"] = str(course_data["start_time"])
     course_data["end_time"] = str(course_data["end_time"])
-
-
     cursor.close()
     conn.close()
-    return jsonify(course_data)
+    return course_data
+
+
+def get_registered_courses(student_id, semester, year):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = """select cr.course_offered_id, co.semester, co.year, c.credits from course_registration cr
+inner join courses_offered co on cr.course_offered_id=co.id
+inner join courses c on cr.course_offered_id=c.id where cr.student_id = %s and semester=%s and year = %s"""
+    cursor.execute(query, (student_id, semester, year))
+    registered_courses = cursor.fetchall()
+    column_names = [desc[0] for desc in cursor.description]
+    cursor.close()
+    conn.close()
+    result = [dict(zip(column_names, registered_course)) for registered_course in registered_courses]
+    return result
+
+
+@app.route('/api/v1/register/courses', methods=['GET'])
+@auth_required
+def fetch_registered_courses():
+    semester = request.args.get('semester', '').upper()
+    year = request.args.get('year', type=int)
+    registered_courses = get_registered_courses(str(g.user_id), semester, year)
+    return jsonify(registered_courses), 200
+
+
+@app.route('/api/v1/register/course/<int:course_offered_id>', methods=['POST'])
+@auth_required
+def register_new_course(course_offered_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    course_offered_details = get_course_offered_details(course_offered_id)
+    if course_offered_details is None:
+        return jsonify({"status": "course not found"}), 404
+
+    registered_courses = get_registered_courses(str(g.user_id), course_offered_details["semester"], str(course_offered_details["year"]))
+
+    sum_credits = 0
+    for registered_course in registered_courses:
+        if registered_course["course_offered_id"] == course_offered_id:
+            return jsonify({"status": "you have already registered for this course"}), 409
+        sum_credits = sum_credits + int(registered_course["credits"])
+
+    if sum_credits >= allowed_credits:
+        return jsonify({"status": "max credits reached"}), 500
+
+    if (allowed_credits - sum_credits) < course_offered_details["credits"]:
+        return jsonify({"status": "remaining credits not sufficient for this course"}), 500
+
+    pre_requisites = []
+    for course in course_offered_details["prerequisite_courses"]:
+        pre_requisites.append(course["id"])
+
+    if len(pre_requisites) > 0:
+        pre_requisites_results = get_pre_requisite_results(g.user_id, pre_requisites)
+
+        if len(pre_requisites) != len(pre_requisites_results):
+            return jsonify({"status": "missing pre requisite"}), 400
+
+        for result in pre_requisites_results:
+            if result["result"] != "PASS":
+                return jsonify({"status": "missing pre requisite"}), 400
+
+    query="""insert into course_registration(student_id, course_offered_id) values (%s, %s);"""
+    cursor.execute(query, (g.user_id, course_offered_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"status": "course registered"}), 200
 
 
 # Function to hash passwords securely

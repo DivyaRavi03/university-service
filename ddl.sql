@@ -155,3 +155,51 @@ CREATE TABLE attendance
     timetable_id INT REFERENCES timetable (id) ON DELETE CASCADE,
     is_present   BOOLEAN NOT NULL
 );
+
+-- Create Result ENUM Type
+CREATE TYPE result_enum AS ENUM ('PASS', 'FAIL');
+
+-- Create Grade ENUM Type
+CREATE TYPE grade_enum AS ENUM ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C', 'D', 'E', 'F');
+
+-- Grade Scale Table
+CREATE TABLE grade_scale (
+                             id SERIAL PRIMARY KEY,
+                             course_offered_id INT REFERENCES courses_offered(id) ON DELETE CASCADE,
+                             ranges JSONB NOT NULL  -- Example: {"A+": [90, 100], "A": [85, 89], ...}
+);
+
+-- Student Grades Table
+CREATE TABLE student_grades (
+                                id SERIAL PRIMARY KEY,
+                                course_registration_id INT REFERENCES course_registration(id) ON DELETE CASCADE,
+                                result result_enum NOT NULL,
+                                grade grade_enum NOT NULL,
+                                final_percentage NUMERIC(5,2) NOT NULL
+);
+
+-- Assignments Table
+CREATE TABLE assignments (
+                             id SERIAL PRIMARY KEY,
+                             course_offered_id INT REFERENCES courses_offered(id) ON DELETE CASCADE,
+                             title VARCHAR(255) NOT NULL,
+                             body TEXT,
+                             start_datetime TIMESTAMP NOT NULL,
+                             end_datetime TIMESTAMP NOT NULL,
+                             is_group_assignment BOOLEAN DEFAULT FALSE,
+                             is_everyone_needs_to_submit BOOLEAN DEFAULT TRUE,
+                             max_points INT NOT NULL,
+                             max_attempts INT DEFAULT 1,
+                             allowed_similarity_score NUMERIC(5,2) DEFAULT 30.00 -- percentage
+);
+
+-- Assignment Submissions Table
+CREATE TABLE assignment_submissions (
+                                        id SERIAL PRIMARY KEY,
+                                        assignment_id INT REFERENCES assignments(id) ON DELETE CASCADE,
+                                        course_registration_id INT REFERENCES course_registration(id) ON DELETE CASCADE,
+                                        uploaded_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                                        uploaded_key VARCHAR(255) NOT NULL, -- e.g., S3 key or file path
+                                        uploaded_file_name VARCHAR(255) NOT NULL,
+                                        similarity_score NUMERIC(5,2)
+);
